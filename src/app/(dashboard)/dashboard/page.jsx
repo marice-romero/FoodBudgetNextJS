@@ -4,7 +4,7 @@ import { getExpenses } from "@/app/actions/Expense";
 import { checkIsAuthenticated } from "@/lib/auth/checkIsAuthenticated";
 import { StoreContext } from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import Dashboard from "../../../components/Dashboard";
 
