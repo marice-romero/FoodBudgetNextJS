@@ -1,3 +1,4 @@
+import { StateProvider } from "@/store";
 import { SessionProvider } from "next-auth/react";
 import { Jersey_10 } from "next/font/google";
 import "./globals.css";
@@ -13,7 +14,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <SessionProvider>
-        <body className={jersey10.className}>{children}</body>
+        <StateProvider>
+          <body className={jersey10.className}>{children}</body>
+        </StateProvider>
       </SessionProvider>
     </html>
   );

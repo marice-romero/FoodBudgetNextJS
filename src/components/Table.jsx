@@ -20,8 +20,6 @@ const Table = ({ expenseList, setExpenseList, totals, setTotals }) => {
   const [showDeleteMsg, setShowDeleteMsg] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  console.log("new expense: ", newExpense);
-
   const handleAddClick = async () => {
     if (!showAdd) setShowAdd(true);
     if (showAdd) {
@@ -122,8 +120,10 @@ const Table = ({ expenseList, setExpenseList, totals, setTotals }) => {
   };
 
   const handleDelete = async () => {
+    console.log("block hit");
     try {
       const response = await deleteExpense(deleteId);
+      console.log("delete response: ", response);
       if (response.success) {
         const deletedExpense = expenseList.find(
           (expense) => expense._id === deleteId

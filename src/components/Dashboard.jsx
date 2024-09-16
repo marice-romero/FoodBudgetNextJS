@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import FilterToggle from "./FilterToggle";
 import FilterByType from "./FilterByType";
 import ProgressCircle from "./ProgressCircle";
 import Table from "./Table";
 import PercentageCircle from "./PercentageCircle";
+import { StoreContext } from "@/store";
 
 const Dashboard = ({
   expenseList,
@@ -21,6 +22,8 @@ const Dashboard = ({
   // amount remaining
   // amount spent
   // grocery/dining out breakdown
+
+  const globalState = useContext(StoreContext);
 
   useEffect(() => {
     setAmountRemaining(maxTotal - totals.totalAmount);
@@ -40,11 +43,19 @@ const Dashboard = ({
           )}
         </div>
         <div className=" p-2 w-3/4 rounded-full bg-emerald-50 shadow-xl mx-auto">
-          <h2 className="text-2xl text-center italic bg-amber-300 w-11/12 shadow-lg p-4 rounded-full mx-auto my-4">
-            {timeRemaining.weeks} {timeRemaining.weeks === 1 ? "week" : "weeks"}{" "}
-            and {timeRemaining.days} {timeRemaining.days === 1 ? "day" : "days"}{" "}
-            remaining
-          </h2>
+          {timeRemaining.weeks >= 0 && timeRemaining.days >= 0 ? (
+            <h2 className="text-2xl text-center italic bg-amber-300 w-11/12 shadow-lg p-4 rounded-full mx-auto my-4">
+              {timeRemaining.weeks}{" "}
+              {timeRemaining.weeks === 1 ? "week" : "weeks"} and{" "}
+              {timeRemaining.days} {timeRemaining.days === 1 ? "day" : "days"}{" "}
+              remaining
+            </h2>
+          ) : (
+            <h2 className="text-2xl text-center italic bg-amber-300 w-11/12 shadow-lg p-4 rounded-full mx-auto my-4">
+              {globalState.state.selectedDateRange}
+            </h2>
+          )}
+
           {maxTotal !== undefined && maxTotal !== null && (
             <ProgressCircle
               title={"Amount Remaining"}

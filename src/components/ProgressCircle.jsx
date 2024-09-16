@@ -2,21 +2,16 @@
 
 import { useSearchParams } from "next/navigation";
 
-const ProgressCircle = ({ title, total, maxTotal }) => {
+const ProgressCircle = ({ title, total = 0, maxTotal = 1 }) => {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
-
-  console.log("total: ", total);
-  console.log("max total: ", maxTotal);
 
   const radius = 115.2; // The radius used for the circle
   const circumference = 2 * Math.PI * radius; // Circumference of the circle
 
   // Calculate the strokeDashoffset based on the total relative to maxTotal
-  const progress = total / maxTotal;
+  const progress = Math.min(Math.max(total / maxTotal, 0), 1); // Clamp progress between 0 and 1
   const strokeDashoffset = circumference * (1 - progress);
-
-  console.log("strokeDA: ", strokeDashoffset);
 
   return (
     <div className="mx-auto relative w-72 h-72 flex items-center justify-center mb-4">

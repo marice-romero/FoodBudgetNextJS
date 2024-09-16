@@ -141,7 +141,7 @@ export const editExpense = async (newExpense) => {
 export const deleteExpense = async (_id) => {
   try {
     await dbConnect();
-    const deletedExpense = Expense.findByIdAndDelete(_id);
+    const deletedExpense = await Expense.findByIdAndDelete(_id);
     if (!deletedExpense) return { success: false };
     return { success: true };
   } catch (error) {

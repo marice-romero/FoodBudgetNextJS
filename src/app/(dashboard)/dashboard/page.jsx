@@ -2,8 +2,9 @@
 
 import { getExpenses } from "@/app/actions/Expense";
 import { checkIsAuthenticated } from "@/lib/auth/checkIsAuthenticated";
+import { StoreContext } from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import Dashboard from "../../../components/Dashboard";
 
@@ -14,6 +15,9 @@ const DashboardPage = () => {
   const type = searchParams.get("type");
   const search = searchParams.get("query");
 
+  const globalState = useContext(StoreContext);
+  const { selectedDateRange } = globalState.state;
+
   const [expenseList, setExpenseList] = useState([]);
   const [totals, setTotals] = useState({});
   const [timeRemaining, setTimeRemaining] = useState([]);
@@ -22,8 +26,11 @@ const DashboardPage = () => {
   const [amountRemaining, setAmountRemaining] = useState(0);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const startDate = "2024-08-11";
-  const endDate = "2024-09-11";
+  const [start, end] = selectedDateRange.split(" - ");
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  console.log("selected date range: ", selectedDateRange);
 
   useEffect(() => {
     const fetchAuthStatus = async () => {
@@ -42,17 +49,12 @@ const DashboardPage = () => {
   useEffect(() => {
     const calculateTimeRemaining = () => {
       const currentDate = new Date();
-      const end = new Date(endDate);
+      const differenceInMilliseconds = endDate - currentDate;
 
-      // Calculate the difference in milliseconds
-      const differenceInMilliseconds = end - currentDate;
-
-      // Convert milliseconds to days
       const differenceInDays = Math.floor(
         differenceInMilliseconds / (1000 * 60 * 60 * 24)
       );
 
-      // Calculate weeks and days
       const weeks = Math.floor(differenceInDays / 7);
       const days = differenceInDays % 7;
 
@@ -60,7 +62,7 @@ const DashboardPage = () => {
     };
 
     calculateTimeRemaining();
-  }, [endDate]);
+  }, [selectedDateRange]);
 
   // Effect to fetch expenses
   useEffect(() => {
@@ -95,11 +97,11 @@ const DashboardPage = () => {
     };
 
     fetchExpenses();
-  }, [searchParams]);
+  }, [searchParams, selectedDateRange]);
 
   return (
     <div className="text-center">
-      {isLoading || !maxTotal || !totals.totalAmount ? (
+      {isLoading ? (
         <div>Loading...</div>
       ) : (
         <Dashboard
