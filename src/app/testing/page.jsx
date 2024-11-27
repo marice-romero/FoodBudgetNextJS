@@ -2,6 +2,8 @@ import ClientTest from "@/components/ClientTest";
 import dbConnect from "@/lib/dbConnect";
 import Expense from "@/lib/models/Expense";
 
+export const dynamic = "force-dynamic";
+
 export default async function TestingPage() {
   const getProgramData = async () => {
     try {
